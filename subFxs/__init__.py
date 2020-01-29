@@ -256,7 +256,8 @@ def showTrial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac
 		units = "height", lineWidth = 2, lineColor = [1, 1, 1], fillColor = [-0.16078431,  0.36470588,  0.67843137])
 
 		# plot the first searching time 
-		for frameIdx in range(nFbFrame):
+		frameIdx = 0
+		while frameIdx < nFbFrame:
 			if not ifPrac:
 				background.draw()
 			# draw the timebar
@@ -265,7 +266,7 @@ def showTrial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac
 			win.flip()
 			# update the leftTime
 			realLeftTime = realLeftTime - expInfo['frameDur']
-
+			frameIdx += 2
 
 		while (not ifPrac and realLeftTime > 0) or (ifPrac and trialIdx < len(expParas['unqHts'])) :
 			# if isPrac, terminate the program after experiencing all four possible options
@@ -308,7 +309,7 @@ def showTrial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac
 				# update the leftTime
 				realLeftTime = realLeftTime - expInfo['frameDur']
 				# update the frame idx and the leftTime
-				frameIdx += 1
+				frameIdx += 2
 
 			# record the response if the trial is missed 
 			if responded == False:
@@ -336,7 +337,7 @@ def showTrial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac
 					totalEarnText.draw()
 					win.flip()
 					# update
-					frameIdx += 1
+					frameIdx += 2
 					realLeftTime = realLeftTime - expInfo['frameDur']
 
 			# trialEarnings and spentHt
@@ -388,7 +389,7 @@ def showTrial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac
 				totalEarnText.draw()
 				realLeftTime = realLeftTime - expInfo['frameDur']
 				win.flip()
-				frameIdx += 1
+				frameIdx += 2
 			# move to the next trial 
 			trialIdx = trialIdx + 1
 			
