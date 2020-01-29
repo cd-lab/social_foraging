@@ -265,7 +265,7 @@ def showTrial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac
 			totalEarnText.draw()
 			win.flip()
 			# update the leftTime
-			realLeftTime = realLeftTime - expInfo['frameDur']
+			realLeftTime = realLeftTime - expInfo['frameDur'] * 2
 			frameIdx += 2
 
 		while (not ifPrac and realLeftTime > 0) or (ifPrac and trialIdx < len(expParas['unqHts'])) :
@@ -307,14 +307,14 @@ def showTrial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac
 					responseFrameIdx = frameIdx
 					responseBlockTime = (blockSec - realLeftTime) 
 				# update the leftTime
-				realLeftTime = realLeftTime - expInfo['frameDur']
+				realLeftTime = realLeftTime - expInfo['frameDur'] * 2
 				# update the frame idx and the leftTime
 				frameIdx += 2
 
 			# record the response if the trial is missed 
 			if responded == False:
 				response = -1 # -1 for miss
-				responseBlockTime = blockSec - realLeftTime
+				responseBlockTime = blockSec - realLeftTime * 2
 				responseRT = np.nan
 
 
@@ -338,7 +338,7 @@ def showTrial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac
 					win.flip()
 					# update
 					frameIdx += 2
-					realLeftTime = realLeftTime - expInfo['frameDur']
+					realLeftTime = realLeftTime - expInfo['frameDur'] * 2
 
 			# trialEarnings and spentHt
 			if response == 1:
@@ -387,7 +387,7 @@ def showTrial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac
 					trialEarnText.draw()
 				drawTime(frameIdx, realLeftTime, ifPrac)
 				totalEarnText.draw()
-				realLeftTime = realLeftTime - expInfo['frameDur']
+				realLeftTime = realLeftTime - expInfo['frameDur'] * 2
 				win.flip()
 				frameIdx += 2
 			# move to the next trial 
