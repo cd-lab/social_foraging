@@ -101,7 +101,7 @@ trialOutput = sf.showTrial(win, expParas, expInfo, thisExp, stims, rwdSeq_, htSe
 thisExp = trialOutput['expHandler']
 
 # add data to the headerFile 
-totalPayments = sum(thisExp['trialEarnings']) / 20 
+totalPayments = sum(trialOutput['trialEarnings']) / 20 
 thisHeader.addData("subId", expInfo['participant'])
 thisHeader.addData("socialCondition", expInfo['social_info_condition'])
 thisHeader.addData("date", expInfo['date'])

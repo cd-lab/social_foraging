@@ -38,7 +38,7 @@ expInfo['date'] = time.strftime("%d%m%Y")
 
 # setup the Window
 win = visual.Window(fullscr=True, screen=0,
-    allowGUI=False, allowStencil=False, size = [1280, 800], units = 'pix',
+    allowGUI=False, allowStencil=False, size = [1440, 900], units = 'pix',
     monitor='testMonitor', color = [0.9764706, 0.5450980, 0.5058824], colorSpace='rgb',
     blendMode='avg', useFBO=True, pos = [0, 0])
 

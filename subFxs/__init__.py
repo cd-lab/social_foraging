@@ -21,7 +21,7 @@ def getExpParas():
 	expParas['rwdHigh'] = 3
 	expParas['rwdLow'] = 1
 	expParas['missLoss'] = -2
-	expParas['blockSec'] = 20 * 60
+	expParas['blockSec'] = 1 * 60
 	expParas['pracBlockSec'] = 30
 	hts_ = {
 	'rich' : np.array([40, 28, 22, 2, 2, 2, 2]),
@@ -198,9 +198,9 @@ def showTrial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac
 		if not ifPrac:
 			if blockIdx > 0:
 				background = visual.ImageStim(win, image="campus2.png", opacity = 0.15,
-					interpolate = True, size = [1280, 800], units = 'pix')
+					interpolate = True, size = [1440, 900], units = 'pix')
 			else:
-				background = visual.ImageStim(win, image="campus1.png", opacity = 0.15, interpolate = True, size = [1280, 800], units = 'pix')
+				background = visual.ImageStim(win, image="campus1.png", opacity = 0.15, interpolate = True, size = [1440, 900], units = 'pix')
 		else:
 			win.color = [0.9764706, 0.5450980, 0.5058824]
 
