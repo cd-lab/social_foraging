@@ -38,7 +38,7 @@ expInfo['date'] = time.strftime("%d%m%Y")
 
 # setup the Window
 win = visual.Window(fullscr=True, screen=0,
-    allowGUI=False, allowStencil=False, size = [1280, 800], units = 'pix',
+    allowGUI=False, allowStencil=False, size = [1440, 900], units = 'pix',
     monitor='testMonitor', colorSpace='rgb',
     blendMode='avg', useFBO=True, pos = [0, 0])
 
@@ -82,7 +82,7 @@ def quitFun():
     try:
         expData = pd.read_csv(fileName + ".csv")
         totalEarnings = sum(expData['trialEarnings'])
-    except pandas.errors.EmptyDataError:
+    except pd.errors.EmptyDataError:
         totalEarnings = 0
     totalPayments = totalEarnings / 20 
     thisHeader.addData("totalPayments", totalPayments)
@@ -101,7 +101,7 @@ trialOutput = sf.showTrial(win, expParas, expInfo, thisExp, stims, rwdSeq_, htSe
 thisExp = trialOutput['expHandler']
 
 # add data to the headerFile 
-totalPayments = sum(trialOutput['trialEarnings']) / 20 
+totalPayments = trialOutput['totalEarnings'] / 20 
 thisHeader.addData("subId", expInfo['participant'])
 thisHeader.addData("socialCondition", expInfo['social_info_condition'])
 thisHeader.addData("date", expInfo['date'])
