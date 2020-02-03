@@ -303,7 +303,7 @@ def showTrial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac
 				if len(keysNow) > 0:
 					responded = True
 					response = 1 if keysNow[0][0] == "k" else 0 # 1 for accept, 0 for reject 
-					responseRT = (frameIdx) * expInfo['frameDur'] # take the [0, 1) interval as 0
+					responseRT = (frameIdx - nFbFrame) * expInfo['frameDur'] # take the [0, 1) interval as 0
 					responseFrameIdx = frameIdx
 					responseBlockTime = (blockSec - realLeftTime) 
 				# update the leftTime
