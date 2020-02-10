@@ -44,7 +44,7 @@ win = visual.Window(fullscr=False, screen=0,
 
 
 # create stimuli
-stims = sf.getStims(win, expParas, -0.2)
+stims = sf.getStims(win, expParas, 0)
 # save the frame rate of the monitor if we can measure it
 expInfo['frameRate']=win.getActualFrameRate()
 print('measured frame rate: ')
