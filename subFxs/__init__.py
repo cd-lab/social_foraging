@@ -69,7 +69,7 @@ def getSeqs(expParas):
 def getStims(win, expParas, horCenter):
 	verCenter = 0.1
 # create stimuli
-	trashCan = visual.Rect(win = win, width = 0.3, height = (max(expParas['unqHts']) + 2)  * 0.008,
+	trashCan = visual.Rect(win = win, width = 0.3, height = (max(expParas['unqHts']) + 2)  * 0.011,
 	units = "height", lineWidth = 4, lineColor = [1, 1, 1], fillColor = [1, 1, 1], pos = (horCenter, verCenter))
 
 	recycleSymbol = visual.ImageStim(win, image="recycle.png", units='height', pos= (horCenter, verCenter),
@@ -79,9 +79,9 @@ def getStims(win, expParas, horCenter):
 	bottlePicture = visual.ImageStim(win, image="bottle.png", units='height', pos= (horCenter, verCenter - 0.1),
 		size=0.18, ori=0.0)
 
-	trash = visual.Rect(win=win, width = 0.295, height = 1 * 0.008,
+	trash = visual.Rect(win=win, width = 0.295, height = 1 * 0.011,
 			units = "height", lineWidth = 4, lineColor = [1, 1, 1], fillColor = [0.5, 0.5, 0.5],\
-			pos = (horCenter, -(max(expParas['unqHts']) + 2 - 1) / 2 * 0.008 + verCenter))
+			pos = (horCenter, -(max(expParas['unqHts']) + 2 - 1) / 2 * 0.011 + verCenter))
 
 	# create the traveling time bar 
 	whiteTimeBar = visual.Rect(win = win, width = expParas['travelSec'] * 0.03, height = 0.03,
@@ -248,8 +248,8 @@ def showTrial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac
 					background.draw()
 				# draw stimuli
 				trashCan.draw()
-				trash.height = scheduledHt * 0.008
-				trash.pos = (horCenter, -(max(expParas['unqHts']) + 2 - scheduledHt) / 2 * 0.008 + verCenter)
+				trash.height = scheduledHt * 0.011
+				trash.pos = (horCenter, -(max(expParas['unqHts']) + 2 - scheduledHt) / 2 * 0.011 + verCenter)
 				trash.draw()
 				if responded == False:
 					recycleSymbol.color = "black"
@@ -291,8 +291,8 @@ def showTrial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac
 						background.draw()
 					trashCan.draw()
 					countDownTime = scheduledHt - (frameIdx - nDecsFrame - nFbFrame) * expInfo['frameDur'] # time for the next win flip
-					trash.height = countDownTime * 0.008
-					trash.pos = (horCenter, -(max(expParas['unqHts']) + 2 - countDownTime) / 2 * 0.008 + verCenter)
+					trash.height = countDownTime * 0.011
+					trash.pos = (horCenter, -(max(expParas['unqHts']) + 2 - countDownTime) / 2 * 0.011 + verCenter)
 					trash.draw()
 					recycleSymbol.color = "blue"
 					recycleSymbol.draw()
@@ -546,8 +546,8 @@ def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, 
 					background.draw()
 				# draw stimuli
 				trashCan.draw()
-				trash.height = scheduledHt * 0.008
-				trash.pos = [horCenter, -(max(expParas['unqHts']) + 2 - scheduledHt) / 2 * 0.008 + verCenter]
+				trash.height = scheduledHt * 0.011
+				trash.pos = [horCenter, -(max(expParas['unqHts']) + 2 - scheduledHt) / 2 * 0.011 + verCenter]
 				trash.draw()
 				if responded == False:
 					recycleSymbol.color = "black"
@@ -589,8 +589,8 @@ def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, 
 						background.draw()
 					trashCan.draw()
 					countDownTime = scheduledHt - (frameIdx - nDecsFrame - nFbFrame) * expInfo['frameDur'] # time for the next win flip
-					trash.height = countDownTime * 0.008
-					trash.pos = [horCenter, -(max(expParas['unqHts']) + 2 - countDownTime) / 2 * 0.008 + verCenter]
+					trash.height = countDownTime * 0.011
+					trash.pos = [horCenter, -(max(expParas['unqHts']) + 2 - countDownTime) / 2 * 0.011 + verCenter]
 					trash.draw()
 					recycleSymbol.color = "blue"
 					recycleSymbol.draw()

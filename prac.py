@@ -43,7 +43,7 @@ win = visual.Window(fullscr=True, screen=0,
     blendMode='avg', useFBO=True, pos = [0, 0])
 
 # create stimuli
-stims = sf.getStims(win, expParas)
+stims = sf.getStims(win, expParas, 0)
 
 # save the frame rate of the monitor if we can measure it
 expInfo['frameRate']=win.getActualFrameRate()
