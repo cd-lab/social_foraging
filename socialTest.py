@@ -44,7 +44,7 @@ win = visual.Window(fullscr=False, screen=0,
 
 
 # create stimuli
-stims = sf.getStims(win, expParas, 0)
+stims = sf.getStims(win, expParas, -0.2)
 # save the frame rate of the monitor if we can measure it
 expInfo['frameRate']=win.getActualFrameRate()
 print('measured frame rate: ')
@@ -97,7 +97,7 @@ event.globalKeys.add(key = "q", func = quitFun)
 seqResults = sf.getSeqs(expParas)
 rwdSeq_ = seqResults['rwdSeq_']
 htSeq_ = seqResults['htSeq_']
-trialOutput = sf.showTrial(win, expParas, expInfo, thisExp, stims, rwdSeq_, htSeq_, False)
+trialOutput = sf.showTrialSocial(win, expParas, expInfo, thisExp, stims, rwdSeq_, htSeq_, False)
 thisExp = trialOutput['expHandler']
 
 # add data to the headerFile 
