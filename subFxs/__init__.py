@@ -12,19 +12,19 @@ import pandas as pd
 def getExpParas():
 	expParas = {}
 	expParas['conditions'] = ['rich', 'poor']
-	expParas['unqHts'] = np.multiply([40, 25, 22, 2.75], 0.75)
-	expParas['decsSec'] = 4 * 0.75
-	expParas['fbSelfSec'] = 3 * 0.75
-	expParas['fbOtherSec'] = 3 * 0.75
-	expParas['travelSec'] = 11 * 0.75
+	expParas['unqHts'] = np.multiply([40, 25, 22, 2.75], 0.7)
+	expParas['decsSec'] = 4 * 0.7
+	expParas['fbSelfSec'] = 3 * 0.7
+	expParas['fbOtherSec'] = 3 * 0.7
+	expParas['travelSec'] = 11 * 0.7
 	expParas['rwd'] = 2
 	expParas['rwdHigh'] = 3
 	expParas['rwdLow'] = 1
 	expParas['missLoss'] = -2
 	expParas['blockSec'] = 20 * 60
 	hts_ = {
-	'rich' : np.multiply([40, 28, 22, 2.75, 2.75, 2.75, 2.75], 0.75),
-	'poor' : np.multiply([40, 28, 28, 28, 28, 22, 2.75], 0.75)
+	'rich' : np.multiply([40, 28, 22, 2.75, 2.75, 2.75, 2.75], 0.7),
+	'poor' : np.multiply([40, 28, 28, 28, 28, 22, 2.75], 0.7)
 	}
 	expParas['hts_'] = hts_
 	return expParas
@@ -389,7 +389,7 @@ def showTrial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac
 def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, ifPrac):
 	# constants 
 	verCenter = 0.1
-	horCenter = -0.2
+	horCenter = 0
 	blockSec = expParas['blockSec']
 
 	# feedback 
@@ -426,8 +426,9 @@ def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, 
 	timeBarTick = stims['timeBarTick'] 
 	timeBarSticker = stims['timeBarSticker']
 	canPicture = stims['canPicture']
+	canPicture.pos = [horCenter - 0.06, verCenter - 0.1]
 	bottlePicture = stims['bottlePicture']
-
+	bottlePicture.pos = [horCenter - 0.06, verCenter - 0.1]
 	# calcualte the number of frames for key events
 	nFbFrame = math.ceil((expParas['travelSec'] - expParas['decsSec']) / expInfo['frameDur'])
 	nDecsFrame = math.ceil(expParas['decsSec'] / expInfo['frameDur'])
@@ -504,11 +505,6 @@ def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, 
 			text = "Earned: ", font=u'Arial', units='height',\
 			pos=[horCenter, -0.28], height= 0.05, color= "white", colorSpace='rgb')
 
-		trialEarnText = visual.TextStim(win=win, ori=0, font=u'Arial', bold = True, units='height',\
-			pos=[horCenter, verCenter + 0.05], height=0.1, color=[-1, -1, -1], colorSpace='rgb') 	
-
-		trialEarnOthers = visual.TextStim(win=win, ori=0, font=u'Arial', bold = True, units='height',\
-			pos=[-horCenter, verCenter + 0.05], height=0.1, color=[-1, -1, -1], colorSpace='rgb') 	
 
 		# create the blue bar
 		blueTimeBar = visual.Rect(win = win, height = 0.03,\
@@ -516,9 +512,9 @@ def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, 
         
         # create feedback 
 		trialEarnText = visual.TextStim(win=win, ori=0, font=u'Arial', bold = True, units='height',\
-		pos=[horCenter, verCenter + 0.05], height=0.1, color=[-1, -1, -1], colorSpace='rgb') 	
+		pos=[horCenter - 0.06, verCenter + 0.05], height=0.1, color=[-1, -1, -1], colorSpace='rgb') 	
 		trialEarnOtherText = visual.TextStim(win=win, ori=0, font=u'Arial', bold = True, units='height',\
-		pos=[-horCenter, verCenter + 0.05], height=0.1, color=[1, -1, -1], colorSpace='rgb') 		
+		pos=[horCenter + 0.06, verCenter + 0.05], height=0.1, color=[1, -1, -1], colorSpace='rgb') 		
 
 		# plot the first searching time 
 		frameIdx = 0
@@ -654,7 +650,7 @@ def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, 
 			while frameIdx < nFbFrame and realLeftTime > 0:	
 				if not ifPrac:
 					background.draw()
-				if frameIdx < nFbFrameSelf:
+				if frameIdx < nFbFrameOther + nFbFrameSelf:
 					if trialEarnings == expParas['rwdHigh']:
 						bottlePicture.draw()
 					elif trialEarnings == expParas['rwdLow']:
