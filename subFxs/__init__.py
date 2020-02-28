@@ -11,7 +11,7 @@ import pandas as pd
 ##### expParas #####
 def getExpParas():
 	expParas = {}
-	expParas['conditions'] = ['rich', 'poor']
+	expParas['conditions'] = ['poor', 'rich']
 	expParas['unqHts'] = np.multiply([40, 25, 22, 2.75], 0.7)
 	expParas['decsSec'] = 4 * 0.7
 	expParas['fbSelfSec'] = 3 * 0.7
@@ -91,10 +91,12 @@ def getStims(win, expParas, horCenter):
 	timeBarSticker = visual.ImageStim(win, image="recycle.png", units='height', pos= (-(expParas['travelSec']/ 2 - expParas['decsSec']) * 0.03 + horCenter, -0.28 + verCenter + 0.025),
 		size=0.03, ori=0.0, color = "black")
 
+	avatar = visual.ImageStim(win, image="avatar.png", units='height', pos= (horCenter, verCenter - 0.1), size=0.1, ori=0.0)
+
 	# return outputs
 	outputs = {'trashCan' : trashCan, 'recycleSymbol' : recycleSymbol, "trash" : trash,\
 	'whiteTimeBar' : whiteTimeBar, 'timeBarTick' : timeBarTick, 'timeBarSticker' : timeBarSticker,
-	'canPicture' : canPicture, 'bottlePicture' : bottlePicture}
+	'canPicture' : canPicture, 'bottlePicture' : bottlePicture, "avatar": avatar}
 	return(outputs)
 
 
@@ -393,8 +395,8 @@ def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, 
 	blockSec = expParas['blockSec']
 
 	# feedback 
-	trialEarningsOnGridOther = pd.read_csv("reference_data/reference.csv", header = None)
-	trialEarningsOnGridOther = trialEarningsOnGridOther.values
+	refData = pd.read_csv("reference_data/reference.csv", header = 0)
+	refData['taskTime'] = refData['blockTime'] + (refData['blockIdx'] - 1) * expParas['blockSec']
 	taskGrid = np.arange(0, expParas['blockSec'] * len(expParas['conditions']), step = 1)
 
 	# define the fucntion to get timeLeftText
@@ -426,9 +428,11 @@ def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, 
 	timeBarTick = stims['timeBarTick'] 
 	timeBarSticker = stims['timeBarSticker']
 	canPicture = stims['canPicture']
-	canPicture.pos = [horCenter - 0.06, verCenter - 0.1]
+	canPicture.pos = [horCenter - 0.1, verCenter - 0.1]
 	bottlePicture = stims['bottlePicture']
-	bottlePicture.pos = [horCenter - 0.06, verCenter - 0.1]
+	bottlePicture.pos = [horCenter - 0.1, verCenter - 0.1]
+	avatar = stims['avatar']
+	avatar.pos = [horCenter + 0.1, verCenter - 0.1]
 	# calcualte the number of frames for key events
 	nFbFrame = math.ceil((expParas['travelSec'] - expParas['decsSec']) / expInfo['frameDur'])
 	nDecsFrame = math.ceil(expParas['decsSec'] / expInfo['frameDur'])
@@ -512,9 +516,9 @@ def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, 
         
         # create feedback 
 		trialEarnText = visual.TextStim(win=win, ori=0, font=u'Arial', bold = True, units='height',\
-		pos=[horCenter - 0.06, verCenter + 0.05], height=0.1, color=[-1, -1, -1], colorSpace='rgb') 	
+		pos=[horCenter - 0.1, verCenter + 0.05], height=0.1, color=[-1, -1, -1], colorSpace='rgb') 	
 		trialEarnOtherText = visual.TextStim(win=win, ori=0, font=u'Arial', bold = True, units='height',\
-		pos=[horCenter + 0.06, verCenter + 0.05], height=0.1, color=[1, -1, -1], colorSpace='rgb') 		
+		pos=[horCenter + 0.1, verCenter + 0.05], height=0.1, color=[1, -1, -1], colorSpace='rgb') 		
 
 		# plot the first searching time 
 		frameIdx = 0
@@ -625,7 +629,9 @@ def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, 
 			totalEarnText.text = "Earned: " + str(totalEarnings) 
 
 			# calculate how many points the other player has earned during the current trial
-			trialEarningsOther = math.ceil(np.sum(trialEarningsOnGridOther[np.logical_and(taskGrid >= preTaskTime, taskGrid < taskTime)]))
+			refData[(refData['taskTime'] < taskTime) & (refData['taskTime'] >= preTaskTime)]['trialEarnings']
+			trialEarningsOther = np.sum(refData[(refData['taskTime'] < taskTime) & (refData['taskTime'] >= preTaskTime)]['trialEarnings'])
+			
 
 			# update self earnings and other earnings 
 			trialEarnText.text = str(trialEarnings)
@@ -644,8 +650,6 @@ def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, 
 			expHandler.nextEntry()
 
 			# give the feedback 
-
-
 			frameIdx = 0
 			while frameIdx < nFbFrame and realLeftTime > 0:	
 				if not ifPrac:
@@ -657,7 +661,8 @@ def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, 
 						canPicture.draw()
 					trialEarnText.draw()
 				if (frameIdx < nFbFrameOther + nFbFrameSelf) & (nFbFrameSelf <= frameIdx):
-					trialEarnOtherText.draw() 
+					trialEarnOtherText.draw()
+					avatar.draw() 
 				drawTime(frameIdx, realLeftTime, ifPrac)
 				totalEarnText.draw()
 				realLeftTime = realLeftTime - expInfo['frameDur']
