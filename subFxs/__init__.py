@@ -11,7 +11,7 @@ import pandas as pd
 ##### expParas #####
 def getExpParas():
 	expParas = {}
-	expParas['conditions'] = ['poor', 'rich']
+	expParas['conditions'] = ['rich', 'poor']
 	expParas['unqHts'] = np.multiply([40, 25, 22, 2.75], 0.7)
 	expParas['decsSec'] = 4 * 0.7
 	expParas['fbSelfSec'] = 3 * 0.7
@@ -21,7 +21,7 @@ def getExpParas():
 	expParas['rwdHigh'] = 3
 	expParas['rwdLow'] = 1
 	expParas['missLoss'] = -2
-	expParas['blockSec'] = 20 * 60
+	expParas['blockSec'] = 3 * 60
 	hts_ = {
 	'rich' : np.multiply([40, 28, 22, 2.75, 2.75, 2.75, 2.75], 0.7),
 	'poor' : np.multiply([40, 28, 28, 28, 28, 22, 2.75], 0.7)
@@ -91,7 +91,7 @@ def getStims(win, expParas, horCenter):
 	timeBarSticker = visual.ImageStim(win, image="recycle.png", units='height', pos= (-(expParas['travelSec']/ 2 - expParas['decsSec']) * 0.03 + horCenter, -0.28 + verCenter + 0.025),
 		size=0.03, ori=0.0, color = "black")
 
-	avatar = visual.ImageStim(win, image="avatar.png", units='height', pos= (horCenter, verCenter - 0.1), size=0.1, ori=0.0)
+	avatar = visual.ImageStim(win, image="avatar.png", units='height', pos= (horCenter, verCenter - 0.1), size = 0.1, ori=0.0)
 
 	# return outputs
 	outputs = {'trashCan' : trashCan, 'recycleSymbol' : recycleSymbol, "trash" : trash,\
@@ -395,9 +395,11 @@ def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, 
 	blockSec = expParas['blockSec']
 
 	# feedback 
-	refData = pd.read_csv("reference_data/reference.csv", header = 0)
-	refData['taskTime'] = refData['blockTime'] + (refData['blockIdx'] - 1) * expParas['blockSec']
-	taskGrid = np.arange(0, expParas['blockSec'] * len(expParas['conditions']), step = 1)
+	# refData = pd.read_csv("reference_data/reference.csv", header = 0)
+	# refData['taskTime'] = refData['blockTime'] + (refData['blockIdx'] - 1) * expParas['blockSec']
+	refData = pd.read_csv("reference_data/reference_group.csv", header = 0)
+	refData['taskTime'] = refData['responseBlockTime'] + (refData['condition'] == "poor") * expParas['blockSec']
+	nSub = len(np.unique(refData['id']))
 
 	# define the fucntion to get timeLeftText
 	def getTimeLeftLabel(realLeftTime):
@@ -629,8 +631,7 @@ def showTrialSocial(win, expParas, expInfo, expHandler, stims, rwdSeq_, htSeq_, 
 			totalEarnText.text = "Earned: " + str(totalEarnings) 
 
 			# calculate how many points the other player has earned during the current trial
-			refData[(refData['taskTime'] < taskTime) & (refData['taskTime'] >= preTaskTime)]['trialEarnings']
-			trialEarningsOther = np.sum(refData[(refData['taskTime'] < taskTime) & (refData['taskTime'] >= preTaskTime)]['trialEarnings'])
+			trialEarningsOther = round(np.sum(refData[(refData['taskTime'] < taskTime) & (refData['taskTime'] >= preTaskTime)]['trialEarnings']) / nSub, 1)
 			
 
 			# update self earnings and other earnings 
