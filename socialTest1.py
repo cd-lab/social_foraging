@@ -97,7 +97,7 @@ event.globalKeys.add(key = "q", func = quitFun)
 seqResults = sf.getSeqs(expParas)
 rwdSeq_ = seqResults['rwdSeq_']
 htSeq_ = seqResults['htSeq_']
-trialOutput = sf.showTrialSocial(win, expParas, expInfo, thisExp, stims, rwdSeq_, htSeq_, False)
+trialOutput = sf.showTrialSocial1(win, expParas, expInfo, thisExp, stims, rwdSeq_, htSeq_, False)
 thisExp = trialOutput['expHandler']
 
 # add data to the headerFile 
