@@ -21,7 +21,7 @@ def getExpParas():
 	expParas['rwdHigh'] = 3
 	expParas['rwdLow'] = 1
 	expParas['missLoss'] = -2
-	expParas['blockSec'] = 3 * 60
+	expParas['blockSec'] = 20 * 60
 	hts_ = {
 	'rich' : np.multiply([40, 28, 22, 2.75, 2.75, 2.75, 2.75], 0.7),
 	'poor' : np.multiply([40, 28, 28, 28, 28, 22, 2.75], 0.7)
