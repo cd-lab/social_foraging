@@ -37,7 +37,7 @@ expInfo['expName'] = expName
 expInfo['date'] = time.strftime("%d%m%Y")
 
 # setup the Window
-win = visual.Window(fullscr=False, screen=0,
+win = visual.Window(fullscr=True, screen=0,
     allowGUI=False, allowStencil=False, size = [1440, 900], units = 'pix',
     monitor='testMonitor', colorSpace='rgb',
     blendMode='avg', useFBO=True, pos = [0, 0])
@@ -97,7 +97,7 @@ event.globalKeys.add(key = "q", func = quitFun)
 seqResults = sf.getSeqs(expParas)
 rwdSeq_ = seqResults['rwdSeq_']
 htSeq_ = seqResults['htSeq_']
-trialOutput = sf.showTrialSocial1(win, expParas, expInfo, thisExp, stims, rwdSeq_, htSeq_, False)
+trialOutput = sf.showTrial(win, expParas, expInfo, thisExp, stims, rwdSeq_, htSeq_, False)
 thisExp = trialOutput['expHandler']
 
 # add data to the headerFile 
