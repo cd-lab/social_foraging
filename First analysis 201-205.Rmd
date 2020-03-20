@@ -1,0 +1,190 @@
+---
+title: "First Analysis P201-205"
+author: "Jacob Raillon"
+date: "2/13/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+source("plotThemes.R")
+
+```
+
+```{r combine data, include=FALSE}
+X201$participant <-c(1)
+X202$participant <-c(2)  
+X203$participant <-c(3)
+X204$participant <-c(4)
+X205$participant <-c(5)
+X206$participant <-c(6)
+data <- rbind(X201, X202, X203, X204, X205, X206)
+data<-data %>% mutate(prev_Earn = lag(trialEarnings))
+
+```
+
+```{r}
+##Reponsetime per participant over trials
+data %>% ggplot(aes(x=trialIdx, y=responseRT,color=factor(blockIdx))) +geom_smooth(aes( group=blockIdx), se = FALSE) + facet_grid(~participant)+ggtitle("Responsetime per Participant")+labs(color = "Environment",y="Mean Responsetime (in sec)", x= "Number of Trials") +myTheme
+ggsave("graph_responsetime_particpants_nonsocial.png", width = 8, height = 4)
+
+##Responsetime per option
+data %>% ggplot(aes(x=trialIdx, y=responseRT,color=factor(blockIdx)))+ 
+geom_smooth(aes( group=blockIdx), se = T) + facet_grid(~data$scheduledHt)+ggtitle("Responsetime")+labs(color = "Environment",y="mean Responsetime (in sec)", x= "Number of Trials") +myTheme
+ggsave("graph_responsetime_options_nonsocial.jpg", width = 8, height = 4)
+```                 
+                 
+```{r} 
+
+##boxplots reaction time on prev earning(rich)
+data %>% filter(blockIdx== 1,is.na(prev_Earn) == FALSE)  %>% ggplot(aes(x=factor(prev_Earn), y=responseRT)) + geom_boxplot(na.rm=TRUE) +facet_grid(~scheduledHt) +ylim(c(0,2))+ggtitle("Responsetime per Option (rich)")+labs(y="mean Responsetime (in sec)", x= "Earnings in previous Trial")+myTheme
+ggsave("boxplot_bl1_nonsocial.jpg", width = 6, height = 4)
+
+##boxplots reaction time on prev earning(poor)
+data %>% filter(blockIdx== 2,is.na(prev_Earn) == FALSE)  %>% ggplot(aes(x=factor(prev_Earn), y=responseRT)) + geom_boxplot(na.rm=TRUE) +facet_grid(~scheduledHt)+ylim(c(0,2))+ggtitle("Responsetime per Option (poor)")+labs(y="mean Responsetime (in sec)", x= "Earnings in previous Trial")+myTheme
+ggsave("boxplot_bl2_nonsocial.jpg", width = 6, height = 4)
+
+```
+
+```{r}
+##Acceptancerate per option (rich)
+data %>% filter(blockIdx== 1 ) %>% group_by(scheduledHt) %>% summarise(se0=sd(responseRT,na.rm=TRUE)/sqrt(sum(!is.na(responseRT))),mean0=mean(responseRT,na.rm=TRUE))%>% ggplot(aes(x=factor(scheduledHt))) +geom_bar(aes(y=mean0), stat = "identity")  +geom_errorbar(aes(ymin=mean0-se0, ymax=mean0+se0)) +ylim(c(0,1)) +ggtitle("Acceeptancerate per Option (Rich)")+labs(y="Acceptancerate (mean)", x= "Options (Scheduled Handlingtime in sec)")+myTheme
+ggsave("bar_acceptacnerate_rich_nonsocial.jpg", width = 4, height = 4)
+
+##Acceptancerate per option (poor)
+data %>% filter(blockIdx== 2 ) %>% group_by(scheduledHt) %>% summarise(se0=sd(responseRT,na.rm=TRUE)/sqrt(sum(!is.na(responseRT))),mean0=mean(responseRT,na.rm=TRUE))%>% ggplot(aes(x=factor(scheduledHt))) +geom_bar(aes(y=mean0), stat = "identity")  +geom_errorbar(aes(ymin=mean0-se0, ymax=mean0+se0)) +ylim(c(0,1)) +ggtitle("Acceeptancerate per Option (Poor)")+labs(y="Acceptancerate (mean)", x= "Options (Scheduled Handlingtime in sec)")+myTheme
+ggsave("bar_acceptancerate_poor_nonsocial.jpg", width = 4, height = 4)
+```
+
+
+```{r}
+###Creating dataframe for SE
+##Data frame for rich condition
+#data1 does not remove NA??
+data1<- data %>% filter(blockIdx== 1, ) %>% group_by(prev_Earn,scheduledHt) %>% summarise(se1=sd(responseRT,na.rm=TRUE)/sqrt(sum(!is.na(responseRT))),mean1=mean(responseRT,na.rm=TRUE))
+
+##Data frame for poor condition
+data2<- data %>% filter(blockIdx== 2 ) %>% group_by(prev_Earn,scheduledHt) %>% summarise(se2=sd(responseRT,na.rm=TRUE)/sqrt(sum(!is.na(responseRT))),mean2=mean(responseRT,na.rm=TRUE))
+
+
+##bargraphs responsetime on prev earning
+#rich
+data1 %>% ggplot(aes(x=factor(prev_Earn))) +geom_bar(aes(y=mean1), stat = "identity")  +facet_grid(~scheduledHt) +geom_errorbar(aes(ymin=mean1-se1, ymax=mean1+se1)) +ylim(c(0,2)) +ggtitle("Responsetime per option (rich)")+labs(y="mean Responsetime (in sec)", x= "Earning in previous Trial")+myTheme
+ggsave("bar_Responsetimeperoption_nonsocial.jpg", width = 6, height = 4) 
+
+#poor
+data2 %>% ggplot(aes(x=factor(prev_Earn))) +geom_bar(aes(y=mean2), stat = "identity")  +facet_grid(~scheduledHt) +geom_errorbar(aes(ymin=mean2-se2, ymax=mean2+se2)) +ylim(c(0,2)) +ggtitle("Responsetime per option (poor)")+labs(y="mean Responsetime (in sec)", x= "Earning in previous Trial")+myTheme
+ggsave("bar_Responsetimeperoption_nonsocial.jpg", width = 6, height = 4)
+
+```
+
+```{r}
+##frequency of options
+#rich
+data %>% filter(blockIdx==1) %>% count(scheduledHt) %>% ggplot(aes(x=factor(scheduledHt), y=n))+geom_bar(stat= "identity") +ggtitle("Frequency per options (rich)")+labs(y="Frequency", x= "Options Handlingtime (in sec)")+myTheme
+ggsave("frequency_options_rich_nonsocial.jpg", width = 4, height = 4)
+
+#poor
+data %>% filter(blockIdx==2) %>% count(scheduledHt) %>% ggplot(aes(x=factor(scheduledHt), y=n))+geom_bar(stat= "identity") +ggtitle("Frequency per options (poor)") +labs(y="Frequency", x= "Options Handlingtime (in sec)")+myTheme
+ggsave("frequency_options_poor_nonsocial.jpg", width = 4, height = 4)
+
+```
+
+
+
+```{r}
+##genral acceptance rate 
+
+#filetring missed trials
+
+data <-data %>% filter(trialEarnings >-1) %>% mutate(Decision=ifelse(trialEarnings==0,0,1))
+
+##Acceptance rate per option cretaing data frame
+
+#rich
+data3<- data %>% filter(blockIdx== 1 )  %>% group_by(prev_Earn,scheduledHt) %>% summarise(se3=sd(Decision)/sqrt(sum(!is.na(Decision))),mean3=mean(Decision))
+
+#poor
+data4<- data %>% filter(blockIdx== 2 ) %>% group_by(prev_Earn,scheduledHt) %>% summarise(se4=sd(Decision)/sqrt(sum(!is.na(Decision))),mean4=mean(Decision))
+
+##plotting: aceeptance rate per previous earnings split for each option
+
+#rich
+data3 %>% ggplot(aes(x=factor(prev_Earn))) +geom_bar(aes(y=mean3), stat = "identity")  +facet_grid(~scheduledHt)+geom_errorbar(aes(ymin=mean3-se3, ymax=mean3+se3)) +ylim(c(0,1)) +ggtitle("Acceptancerate by previous Earnings (rich)") +labs(y="Acceptancerate", x= "Previous Earnings")+myTheme
+ggsave("bars_acceptancerate_rich.jpg", width = 6, height = 4)
+
+#poor
+data4 %>% ggplot(aes(x=factor(prev_Earn))) +geom_bar(aes(y=mean4), stat = "identity")  +facet_grid(~scheduledHt) +geom_errorbar(aes(ymin=mean4-se4, ymax=mean4+se4)) +ylim(c(0,1))+ggtitle("Acceptancerate by previous Earnings (poor)") +labs(y="Acceptancerate", x= "Previous Earnings") +myTheme
+ggsave("bars_acceptancerate_poor.jpg", width = 6, height = 4) 
+```
+
+
+```{r}
+##acceptance rate per option over time (graph) 
+data  %>% ggplot(aes(x=trialIdx, y=Decision,color=factor(blockIdx)))+ 
+geom_smooth(aes( group=blockIdx), se = F, span=0.3) +ylim(c(0,1))+ facet_grid(~scheduledHt)+ggtitle("Acceptancerate")+labs(color = "Environment",y="mean Acceptance (0 to 1)", x= "Number of Trials") +myTheme
+ggsave("graph_acceptancerate.jpg", width = 6, height = 4)
+
+##creating dataframe:accceptancerate per options points
+#rich
+data5<- data %>% filter(blockIdx== 1 ) %>% group_by(scheduledHt,trialIdx) %>% summarise(se5=sd(Decision)/sqrt(sum(!is.na(Decision))),mean5=mean(Decision))
+
+#poor
+data6<- data %>% filter(blockIdx== 2 ) %>% group_by(scheduledHt,trialIdx) %>% summarise(se6=sd(Decision)/sqrt(sum(!is.na(Decision))),mean6=mean(Decision))
+
+#creating plot:accceptancerate per options points
+#rich
+data5  %>% ggplot(aes(x=trialIdx, y=mean5))+ 
+geom_point(alpha=0.3) + facet_grid(~scheduledHt)+ggtitle("Acceptancerate")+labs(color = "Environment",y="mean Acceptance (0 to 1)", x= "Number of Trials")+ggtitle("Acceptancerate (rich)")+labs(color = "Environment",y="mean Acceptance (0 to 1)", x= "Number of Trials") +myTheme
+ggsave("point_acceptancerate_options_poor_nonsocial.jpg", width = 6, height = 4)
+
+#poor
+data6  %>% ggplot(aes(x=trialIdx, y=mean6))+ 
+geom_point(alpha=0.3) + facet_grid(~scheduledHt)+ggtitle("Acceptancerate")+labs(color = "Environment",y="mean Acceptance (0 to 1)", x= "Number of Trials")+ggtitle("Acceptancerate (poor)")+labs(color = "Environment",y="mean Acceptance (0 to 1)", x= "Number of Trials")+myTheme
+ggsave("point_acceptancerate_options_poor_nonsocial.jpg", width = 6, height = 4)
+```
+
+##waste
+
+#further indiviudal analysis
+#particpanat1
+data7<- data %>% filter(participant==1 ) %>% group_by(scheduledHt,trialIdx,prev_Earn, blockIdx, Decision) %>% summarise(se5=sd(Decision)/sqrt(sum(!is.na(Decision))),mean5=mean(Decision))
+
+data7  %>% ggplot(aes(x=trialIdx, y=mean5))+ 
+geom_point(alpha=0.3) + facet_grid(~scheduledHt)+ggtitle("Acceptancerate")+labs(color = "Environment",y="mean Acceptance (0 to 1)", x= "Number of Trials")+ggtitle("Acceptancerate (rich)")+labs(color = "Environment",y="mean Acceptance (0 to 1)", x= "Number of Trials") +myTheme
+
+data7 %>% ggplot(aes(x=factor(prev_Earn), y=mean(Decision))) +geom_point()
+
+data7 %>% ggplot(aes(x=factor(prev_Earn),y=Decision)) +geom_point()  +facet_grid(~scheduledHt) +ggtitle("Acceptancerate by previous Earnings (rich)") +labs(y="Acceptancerate", x= "Previous Earnings")+myTheme
+
+
+
+data6<- data %>% filter(blockIdx== 2 ) %>% group_by(scheduledHt,trialIdx, participant) %>% summarise(se6=sd(Decision)/sqrt(sum(!is.na(Decision))),mean6=mean(Decision))
+
+
+data  %>% filter(blockIdx== 2 ) %>% ggplot(aes(x=trialIdx, y=Decision, color=factor(participant)))+ 
+geom_point() + facet_grid(~scheduledHt)+stat_smooth(aes(color=factor(participant)),method="loess",span = 0.1,se=F)+ggtitle("Acceptancerate")+labs(color = "Participant",y="mean Acceptance (0 to 1)", x= "Number of Trials")
+
+
+
+
+data5 %>% ggplot(aes(x=scheduledHt,y=mean5)) +geom_point(aes( alpha=0.1))+facet_grid(~scheduledHt)
+
+
+lm.fit(data5$mean5~data5$trialIdx)
+
+graph<-
+lm(data5$mean5~data5$trialIdx)  abline( 0.3324981, 0.0001785 )
+
+plot(data5$mean5~data5$trialIdx) %>% 
+abline(lm(data5$mean5~data5$trialIdx))
+       
+    
+data5<- data %>% filter(blockIdx== 1 ) %>% group_by(scheduledHt,trialIdx) %>% summarise(se5=sd(Decision)/sqrt(sum(!is.na(Decision))))
+
+data5 %>% ggplot(aes(x=factor(trialIdx))) +geom_smooth(aes(group=BlockIdx))
+
+ geom_errorbar(aes(ymin=mean5-se5, ymax=mean5+se5)) +ylim(c(0,1)) 
+```
